@@ -62,33 +62,31 @@ Frequency Domain
 function draw() {
 	background(bg)
 	// essentially an array with length of bins and values from 0 - 255
-	// we gonna update our detection objects with the fft everyframe
 	fft.analyze(bins)
 	peakDetect.update(fft)
 	bassDetect.update(fft)
 	highMid.update(fft)
 	const volume = amplitude.getLevel()
-	//get centroid is essentially returning where the average of our fft sprectrum is
 	let freq = fft.getCentroid()
-	// dampen the hell out of it
 	freq *= 0.001
-	// in our shaders we're using values between 0, 20 and 0, 0.5 so we need to map our freq to that range
 	const mapF = map(freq, 0, 1, 0, 20)
 	const mapA = map(volume, 0, 0.2, 0, 0.5)
-
-	//how we pass uniforms 'variables' to our shaders
 	myShaders.setUniform('u_time', frameCount)
 	myShaders.setUniform('u_freq', mapF)
 	myShaders.setUniform('u_amp', mapA)
-
-	// our 3d object
+	let locX = mouseX - width / 2
+	let locY = mouseY - height / 2
+	// ambientLight(60, 60, 60)
+	// pointLight(255, 255, 255, locX, locY, 50)
+	// specularMaterial(250)
+	// translate(-25, 0, 0)
+	// shininess(1)
 	sphere(width / 6, 200, 200)
 	push()
-	// apparently how we move our 3d object around
 	translate(-width / 3, -height / 4, 0)
+	// normalMaterial()
 	rotateX(frameCount * 0.01)
 	rotateY(frameCount * 0.01)
-	// some boxes, we used push and pop so we can move our 3d object around and rotate it without affecting other stuff
 	box(100)
 	pop()
 	push()
@@ -115,7 +113,6 @@ function draw() {
 }
 
 function peakDetected() {
-	// for now just changing bg color on peakDetect, feel free to change this to do something else
 	bg = color(random(255), random(255), random(255), 80)
 }
 function bassDetected() {
